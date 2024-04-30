@@ -7,6 +7,6 @@ from crud.base import db_servie
 
 router = APIRouter()
 
-@router.post('/login', response_model=UserQuery)
+@router.post('/login', response_model=list[UserQuery])
 def login(form: LoginForm, db: Session = Depends(db_servie.get_db)):
     return auth_service.authenticate(form, db)
