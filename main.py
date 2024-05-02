@@ -8,6 +8,8 @@ def get_application():
 
 app = get_application()
 app.include_router(api_router)
+from middleware.token import TokenMiddleware
+app.add_middleware(TokenMiddleware, skip_paths=['/auth/login','/test/','/docs'])
 
 @app.get("/")
 def root():

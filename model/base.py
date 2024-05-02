@@ -1,5 +1,7 @@
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, func
 from sqlalchemy.orm import as_declarative, declared_attr
+from sqlalchemy.inspection import inspect
 
 @as_declarative()
 class Base:
@@ -18,10 +20,17 @@ class Base:
     def __tablename__(cls) -> str:
         return cls.__name__.lower()
 
+    def to_dict(self) -> dict: # model转换字典，主要未来避免InstanceState字段出现
+        return {
+            c.key: getattr(self, c.key).isoformat() if isinstance(getattr(self, c.key), datetime)
+            else getattr(self,c.key) for c in inspect(self).mapper.column_attrs # 对于时间字段，需要转换成字符串因为时间字段不可序列化
+        }
+
 class User(Base):
     user_name = Column(String(128), nullable=False, unique=True)
     pwd = Column(String(128), nullable=False)
     email = Column(String(128), nullable=True, unique=True)
 
 
-
+if __name__ == '__main__':
+    print(User().to_dict())
