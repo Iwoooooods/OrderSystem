@@ -5,7 +5,7 @@ from schema.base import UserQuery, LoginForm
 from api.service.auth_service import auth_service
 from crud.base import db_servie
 
-router = APIRouter()
+router = APIRogit uter()
 
 @router.post('/login', response_model=list[str])
 async def login(form: LoginForm, db: Session = Depends(db_servie.get_db)):
