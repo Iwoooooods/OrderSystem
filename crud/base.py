@@ -11,9 +11,10 @@ class DBService:
     #从.env中读取数据库配置信息
     REMOTE_DATABASE_URL = os.getenv('REMOTE_DATABASE_URL')
     #本地测试数据库
-    LOCAL_DATABASE_URL = 'mysql+pymysql://root:140323@localhost:3306/test_db'
+    LOCAL_DATABASE_URL = 'mysql+pymysql://root:140323@localhost:3306/'
+    DEV_DATABASE = 'test_db'
     #创建表
-    engine = create_engine(LOCAL_DATABASE_URL)
+    engine = create_engine(LOCAL_DATABASE_URL+DEV_DATABASE, echo=True)
     #创建会话
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -38,7 +39,8 @@ class DBService:
                 fake = faker.Faker()
                 user_name = fake.name()
                 password = fake.password(length=6)
-                user = User(user_name=user_name, pwd=password)
+                email = fake.email()
+                user = User(user_name=user_name, pwd=password, email=email)
                 users.append(user)
             print('added some')
 
