@@ -20,8 +20,15 @@ def crud_get_one_by_condition(db: Session, condition: Union[dict, None] = None):
         query = query.filter(and_(*filters))
     return query.first()
 
+def crud_add_user(db: Session, user: User):
+    print(f'name: {user.user_name}+email: {user.email}')
+    db.add(user)
+    db.commit()
+
 if __name__ == '__main__':
     from base import db_servie
-    result = crud_get_multi_by_condition(next(db_servie.get_db()))
+    session = next(db_servie.get_db())
+    crud_add_user((session), User(user_name='admin', email='15388014287@163.com', pwd='welcome'))
+    result = crud_get_multi_by_condition(session)
     for res in result:
-        print(res.to_dict())
+        print(f'{res.to_dict()}')

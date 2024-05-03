@@ -38,7 +38,8 @@ class DBService:
                 fake = faker.Faker()
                 user_name = fake.name()
                 password = fake.password(length=6)
-                user = User(user_name=user_name, pwd=password)
+                email = fake.email()
+                user = User(user_name=user_name, pwd=password, email=email)
                 users.append(user)
             print('added some')
 
