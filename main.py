@@ -8,15 +8,17 @@ def get_application():
 
 app = get_application()
 app.include_router(api_router)
-from middleware.token import TokenMiddleware
-app.add_middleware(TokenMiddleware, skip_paths=['/openapi.json','/auth/login','/test/','/docs'])
+# 设置中间件
+from middleware import token, logging
+app.add_middleware(token.TokenMiddleware, skip_paths=['/openapi.json','/auth/login','/test/','/docs'])
+app.middleware('http')(logging.logging)
 
 @app.get("/")
-def root():
+async def root():
     return {"message": "Hello!"}
 
 @app.on_event('startup')
-def on_startup():
+async def on_startup():
     print("startup")
     from crud.base import db_servie
     db_servie.init_db()
