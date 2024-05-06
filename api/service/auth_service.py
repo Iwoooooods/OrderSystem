@@ -1,11 +1,16 @@
 import os
-
 import httpx
+
 from fastapi import Form, HTTPException, Depends
 from loguru import logger
 from model.base import User
 from crud.crud_user import crud_get_one_by_condition, crud_add_user
 from middleware.token import create_access_token
+from enum import Enum
+
+class UserType(Enum):
+    CUSTOMER = 'customer'
+    MERCHANT = 'merchant'
 
 class AuthService:
     def __init__(self) -> None:
@@ -18,8 +23,14 @@ class AuthService:
         if user_exist:
             token = create_access_token(user.to_dict())
             with httpx.AsyncClient() as client:
-                response = await client.get(url=os.getenv('DEV_API_URL')+'/customer/home', headers={'Authorization': f'Bearer {token}'})
-                return response.json()
+                if api_in.user_type == UserType.CUSTOMER:
+                    response = await client.get(url=os.getenv('DEV_API_URL')+'/customer/home',
+                                                headers={'Authorization': f'Bearer {token}'})
+                    return response.json()
+                elif api_in.user_type == UserType.MERCHANT:
+                    response = await client.get(url=os.getenv('DEV_API_URL')+'/merchant/home',
+                                                headers={'Authorization': f'Bearer {token}'})
+                    return response.json()
         else:
             logger.info('login failed due to: Incorrect Credentials')
             raise HTTPException(detail='Incorrect Credentials', status_code=401)
@@ -33,9 +44,14 @@ class AuthService:
         logger.info(f'User register: {user.user_name} - {user.email}')
         token = create_access_token(user.to_dict())
         with httpx.AsyncClient() as client:
-            response = await client.get(url=os.getenv('DEV_API_URL') + '/customer/home',
-                                        headers={'Authorization': f'Bearer {token}'})
-            return response.json()
+            if api_in.user_type == UserType.CUSTOMER:
+                response = await client.get(url=os.getenv('DEV_API_URL') + '/customer/home/',
+                                            headers={'Authorization': f'Bearer {token}'})
+                return response.json()
+            elif api_in.user_type == UserType.CUSTOMER:
+                response = await client.get(url=os.getenv('DEV_API_URL') + '/merchant/home/',
+                                            headers={'Authorization': f'Bearer {token}'})
+                return response.json()
         raise HTTPException(detail='Register failed')
 
 auth_service = AuthService()

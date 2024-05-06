@@ -1,14 +1,15 @@
 from typing import List
 
 import jwt
+import os
 from datetime import datetime, timedelta
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request, HTTPException, FastAPI
 from loguru import logger
 
 
-SECRECT_KEY = 'HEHUAISEN'
-ALGORITHM = 'HS256'
+SECRECT_KEY = os.getenv('SECRECT_KEY')
+ALGORITHM = os.getenv('ALGORITHM')
 expires_delta = timedelta(minutes=15)
 
 def create_access_token(data: dict, expires_delta: timedelta = expires_delta) -> str:

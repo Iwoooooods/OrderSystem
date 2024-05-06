@@ -4,7 +4,7 @@ router = APIRouter()
 
 @router.get("/") # 商城主界面
 async def home():
-    pass
+    return f'Welcome to the home page of the online store!'
 
 @router.get("/detail") # 查看商品详情
 async def detail():

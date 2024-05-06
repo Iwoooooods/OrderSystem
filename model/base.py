@@ -1,7 +1,8 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, func, Float, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, DateTime, func, Float, ForeignKey, Enum as SQLAlchemyEnum
 from sqlalchemy.orm import as_declarative, declared_attr, validates
 from sqlalchemy.inspection import inspect
+from enum import Enum
 
 @as_declarative()
 class Base:
@@ -51,10 +52,16 @@ class Product(Base):
             raise ValueError('quantity must be positive')
         return value
 
+class OrderStatus(Enum):
+    PAID = 'paid'
+    REFUND = 'refund'
+    DELIVERED = 'delivered'
+    RECEIVED = 'received'
+
 class Order(Base):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     product_id = Column(Integer, ForeignKey('product.id'), nullable=False)
-    status = Column(Enum('paid', 'refund', 'delivered', 'received'))
+    status = Column(SQLAlchemyEnum(OrderStatus))
 
 class OrderItem(Base):
     __tablename__ = 'order_item'
@@ -66,7 +73,7 @@ class OrderItem(Base):
 class Cart(Base):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     product_id = Column(Integer, ForeignKey('product.id'), nullable=False)
-    status = Column(Enum('paid', 'refund', 'delivered', 'received'))
+    status = Column(SQLAlchemyEnum(OrderStatus))
 
 class CartItem(Base):
     __tablename__ = 'cart_item'
