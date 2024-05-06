@@ -1,7 +1,10 @@
+from typing import List
+
 import jwt
 from datetime import datetime, timedelta
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request, HTTPException, FastAPI
+from loguru import logger
 
 
 SECRECT_KEY = 'HEHUAISEN'
@@ -16,7 +19,7 @@ def create_access_token(data: dict, expires_delta: timedelta = expires_delta) ->
     return encoded_jwt
 
 class TokenMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app: FastAPI, skip_paths: list[str]=None):
+    def __init__(self, app: FastAPI, skip_paths: List[str]=[]):
         super().__init__(app)
         self.secret_key = SECRECT_KEY
         self.algorithm = ALGORITHM
@@ -27,11 +30,13 @@ class TokenMiddleware(BaseHTTPMiddleware):
 
         token = request.headers.get('Authorization')
         if not token:
+            logger.error('Token missing')
             raise HTTPException(status_code=401,  detail="Authorization header missing")
         try:
             payload = self.verify_token(token)
             request.state.user = payload
         except Exception as e:
+            logger.error(e)
             raise HTTPException(status_code=401, detail="Invalid Token")
 
         response = await call_next(request)

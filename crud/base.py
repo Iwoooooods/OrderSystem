@@ -33,13 +33,14 @@ class DBService:
         results = self.SessionLocal().query(User).all()
         if len(results) == 0:
             print("No users")
-            users = [User(user_name='guest', email='localhost@guest.com', pwd='hello!')]
+            users = [User(user_name='customer', email='localhost@customer.com', pwd='hello!')]
             from model.base import User
             for i in range(10):
                 fake = faker.Faker()
                 user_name = fake.name()
                 password = fake.password(length=6)
                 email = fake.email()
+
                 user = User(user_name=user_name, pwd=password, email=email)
                 users.append(user)
             print('added some')
