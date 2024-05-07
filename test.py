@@ -22,4 +22,6 @@ async def main():
     print('done')
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    from loguru import logger
+    logger.add('test.log')
+    logger.info('test')
