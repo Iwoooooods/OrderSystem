@@ -1,17 +1,17 @@
-import os, sys
+import faker
 from typing import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
 from model.base import Base
-import faker
+from core_settiing import setting
 
 class DBService:
     #从.env中读取数据库配置信息
-    REMOTE_DATABASE_URL = os.getenv('REMOTE_DATABASE_URL')
+    REMOTE_DATABASE_URL = setting.REMOTE_DATABASE_URL
     #本地测试数据库
-    LOCAL_DATABASE_URL = os.getenv('LOCAL_DATABASE_URL')
+    LOCAL_DATABASE_URL = setting.LOCAL_DATABASE_URL
     DEV_DATABASE = 'test_db'
     db_url = LOCAL_DATABASE_URL+DEV_DATABASE
     #创建表
