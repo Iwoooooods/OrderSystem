@@ -3,13 +3,13 @@ from fastapi import Form
 from pydantic import BaseModel
 
 class UserBase(BaseModel):
-    user_name: str
+    id: int
 
 class UserCreate(UserBase):
     password: str
 
 class UserQuery(UserBase):
-    id: int
+    user_name: str
     is_active: bool = False
 
 class LoginForm(BaseModel):

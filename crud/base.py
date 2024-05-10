@@ -32,23 +32,23 @@ class DBService:
         #检查user表和admin表中是否有数据，无则加入
         from model.base import User
         results = self.SessionLocal().query(User).all()
-        if len(results) == 0:
-            print("No users")
-            users = [User(user_name='customer', email='localhost@customer.com', pwd='hello!')]
-            from model.base import User
-            for i in range(10):
-                fake = faker.Faker()
-                user_name = fake.name()
-                password = fake.password(length=6)
-                email = fake.email()
-
-                user = User(user_name=user_name, pwd=password, email=email)
-                users.append(user)
-            print('added some')
-
-            session.add_all(users)
-            session.commit()
-            session.close()
+        # if len(results) == 0:
+        #     print("No users")
+        #     users = [User(user_name='customer', email='localhost@customer.com', pwd='hello!')]
+        #     from model.base import User
+        #     for i in range(10):
+        #         fake = faker.Faker()
+        #         user_name = fake.name()
+        #         password = fake.password(length=6)
+        #         email = fake.email()
+        #
+        #         user = User(user_name=user_name, pwd=password, email=email)
+        #         users.append(user)
+        #     print('added some')
+        #
+        #     session.add_all(users)
+        #     session.commit()
+        #     session.close()
 
 
 

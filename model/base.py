@@ -35,6 +35,7 @@ class User(Base):
 
 class Category(Base):
     category_name = Column(String(128), nullable=False, unique=True)
+    
 class Product(Base):
     product_name = Column(String(128), nullable=False, unique=True)
     price = Column(Float, nullable=False, )

@@ -24,6 +24,5 @@ async def root():
 
 @app.on_event('startup')
 async def on_startup():
-    await logging.create_log_file()
     from crud.base import db_servie
     db_servie.init_db()
