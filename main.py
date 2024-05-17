@@ -5,12 +5,12 @@ def get_application():
     app = FastAPI()
     return app
 
-from customer.api import customer_app
-from merchant.api import merchant_app
+from customer.api import cust_router
+from merchant.api import merch_router
 app = get_application()
 app.include_router(api_router)
-app.mount('/customer', customer_app)
-app.mount('/merchant', merchant_app)
+app.include_router(cust_router,prefix='/customer')
+app.include_router(merch_router, prefix='/merchant')
 
 # 设置中间件
 from middleware import token, logging

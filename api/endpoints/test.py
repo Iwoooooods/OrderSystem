@@ -4,7 +4,7 @@ from typing import Union
 
 from crud.base import db_servie
 from crud.crud_user import crud_get_one_by_condition
-from schema.base import UserQuery
+from schema.user_schema import UserQuery
 from model.base import User
 
 router = APIRouter()

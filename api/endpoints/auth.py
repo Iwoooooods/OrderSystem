@@ -1,7 +1,7 @@
 from fastapi import Depends, APIRouter, Form
 from sqlalchemy.orm import Session
 
-from schema.base import UserQuery, LoginForm
+from schema.user_schema import UserQuery, LoginForm
 from api.service.auth_service import auth_service
 from crud.base import db_servie
 
