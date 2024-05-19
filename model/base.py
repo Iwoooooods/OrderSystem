@@ -87,7 +87,7 @@ class Cart(Base):
         放弃购物车状态为abandoned
         保存购物车状态为saved（即修改过）
     """
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False, unique=True)
     status = Column(SQLAlchemyEnum(CartStatus), default=CartStatus.ACTIVE)
 
 class CartItem(Base):

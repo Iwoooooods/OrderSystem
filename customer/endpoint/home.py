@@ -15,13 +15,17 @@ async def home(api_in: ProductQuery, db: Session = Depends(db_servie.get_db)):
 async def detail(id: int, db: Session = Depends(db_servie.get_db)):
     return await product_service.get_product_detail(id, db)
 
-@router.get("/add_to_cart") # 加入购物车
-async def add_to_cart(user_id: int, product_id: int, db: Session = Depends(db_servie.get_db)):
-    await product_service.add_to_cart(user_id, product_id, db)
+@router.post("/add_to_cart") # 加入购物车
+async def add_to_cart(user_id: int, product_id: int, quantity: int, db: Session = Depends(db_servie.get_db)): # userid后续要改为自动获取登录后的userid
+    return await product_service.add_or_update_cart(user_id, product_id, quantity, db)
 
 @router.get("/go_cart") # 查看购物车
-async def go_cart():
-    pass
+async def go_cart(user_id: int, db: Session = Depends(db_servie.get_db)):
+    return await product_service.show_cart(user_id, db)
+
+@router.get("/update_cart")# 更新购物车
+async def update_cart(user_id: int, product_id: int, quantity: int, db: Session =Depends(db_servie.get_db)):
+    return await product_service.add_or_update_cart(user_id, product_id, quantity, db)
 
 @router.post("/purchase") # 直接购买商品
 async def purchase():

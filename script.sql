@@ -59,6 +59,8 @@ create table cart
     created_at  datetime default CURRENT_TIMESTAMP                   null comment '创建时间',
     modified_at datetime                                             null comment '更新时间',
     status      enum ('ACTIVE', 'CHECKED_OUT', 'ABANDONED', 'SAVED') null,
+    constraint user_id_2
+        unique (user_id),
     constraint cart_ibfk_1
         foreign key (user_id) references user (id)
 );
