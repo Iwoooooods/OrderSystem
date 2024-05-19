@@ -1,13 +1,9 @@
-from typing import List
-
 from fastapi import Depends, APIRouter, Form
 from sqlalchemy.orm import Session
 
-from schema.base import UserQuery, LoginForm
-from model.base import User
+from schema.user_schema import UserQuery, LoginForm
 from api.service.auth_service import auth_service
 from crud.base import db_servie
-from crud.crud_user import crud_get_one_by_condition
 
 router = APIRogit uter()
 
@@ -17,6 +13,7 @@ async def login(form: LoginForm, db: Session = Depends(db_servie.get_db)):
     return auth_service.login(db, form)
 
 
-@router.put('/register', response_model=dict)
+@router.put('/register')
 async def register(form: LoginForm, db: Session = Depends(db_servie.get_db)):
     return auth_service.register(db, form)
+

@@ -35,6 +35,7 @@ class User(Base):
 
 class Category(Base):
     category_name = Column(String(128), nullable=False, unique=True)
+
 class Product(Base):
     product_name = Column(String(128), nullable=False, unique=True)
     price = Column(Float, nullable=False, )
@@ -53,15 +54,23 @@ class Product(Base):
         return value
 
 class OrderStatus(Enum):
+    UNPAID = "unpaid"
     PAID = 'paid'
     REFUND = 'refund'
     DELIVERED = 'delivered'
     RECEIVED = 'received'
 
+class CartStatus(Enum):
+    ACTIVE = "active"
+    CHECKED_OUT = "checked_out"
+    ABANDONED = "abandoned"
+    SAVED = "saved"
+
+
+
 class Order(Base):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    product_id = Column(Integer, ForeignKey('product.id'), nullable=False)
-    status = Column(SQLAlchemyEnum(OrderStatus))
+    status = Column(SQLAlchemyEnum(OrderStatus), default=OrderStatus.UNPAID)
 
 class OrderItem(Base):
     __tablename__ = 'order_item'
@@ -71,16 +80,26 @@ class OrderItem(Base):
     price_at_time = Column(Float, nullable=False)
 
 class Cart(Base):
+    """
+        购物车表，每个user拥有一个抽象的cart
+        刚加入购物车的商品状态为active
+        结账后状态为checked_out
+        放弃购物车状态为abandoned
+        保存购物车状态为saved（即修改过）
+    """
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    product_id = Column(Integer, ForeignKey('product.id'), nullable=False)
-    status = Column(SQLAlchemyEnum(OrderStatus))
+    status = Column(SQLAlchemyEnum(CartStatus), default=CartStatus.ACTIVE)
 
 class CartItem(Base):
+    """
+        购物车操作表，每一条操作会有一条记录
+        每一条记录包含当时价格以及数量和对应的购物车id
+    """
     __tablename__ = 'cart_item'
     cart_id = Column(Integer, ForeignKey('cart.id'))
     product_id = Column(Integer, ForeignKey('product.id'))
-    quantity = Column(Integer, nullable=False)
-    price_at_time = Column(Float, nullable=False)
+    quantity = Column(Integer, nullable=False, default=1)
+    price_at_time = Column(Float, nullable=False) # 商家设定的价格
 
 
 if __name__ == '__main__':

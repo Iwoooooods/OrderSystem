@@ -1,8 +1,8 @@
-from fastapi import FastAPI
-from endpoint import home, cart, order
+from fastapi import APIRouter
+from customer.endpoint import home, cart, order
 
-customer_app = FastAPI()
+cust_router = APIRouter()
 #商品主界面home、购物车节目cart、订单界面order
-customer_app.include_router(home.router, prefix='/home')
-customer_app.include_router(cart.router, prefix='/cart')
-customer_app.include_router(order.router, prefix='/order')
+cust_router.include_router(home.router, prefix='/home', tags=['customer'])
+cust_router.include_router(cart.router, prefix='/cart', tags=['customer'])
+cust_router.include_router(order.router, prefix='/order', tags=['customer'])
